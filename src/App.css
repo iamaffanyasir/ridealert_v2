@@ -606,6 +606,13 @@ body {
   font-size: 0.9rem;
   font-weight: 500;
   transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+  touch-action: manipulation; /* Optimize for touch */
+  cursor: pointer;
+  user-select: none; /* Prevent text selection */
+  /* Add padding for better touch target */
+  padding: 0.8rem 1.8rem;
+  min-height: 44px; /* Minimum touch target size */
 }
 
 .edit-helmet-name:hover {
@@ -677,6 +684,8 @@ body {
   padding: 0.8rem 1.5rem;
   border-radius: 30px;
   border: 1px solid var(--border-color);
+  position: relative;  /* Add this */
+  z-index: 10;        /* Add this */
 }
 
 .edit-helmet-icon {
@@ -693,6 +702,15 @@ body {
   border-radius: 50%;
   width: 35px;
   height: 35px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  cursor: pointer;
+  user-select: none;
+  /* Increase touch target size */
+  min-width: 44px;
+  min-height: 44px;
+  position: relative;  /* Add this */
+  z-index: 20;        /* Add this */
 }
 
 .edit-helmet-icon:hover {
@@ -913,6 +931,16 @@ body {
   position: relative;
   overflow: hidden;
   box-shadow: 0 2px 5px rgba(102, 179, 255, 0.2);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  cursor: pointer;
+  user-select: none;
+  /* Add padding for better touch target */
+  padding: 0.8rem 1.8rem;
+  min-height: 44px;
+  position: relative;  /* Add this */
+  z-index: 20;        /* Add this */
+  pointer-events: auto;  /* Add this */
 }
 
 /* Update ripple effect */
@@ -1650,4 +1678,55 @@ body {
       opacity: 1;
     }
   }
+}
+
+/* Ensure buttons have proper touch feedback */
+.edit-helmet-name:active,
+.nav-item:active,
+.edit-helmet-icon:active {
+  opacity: 0.7;
+}
+
+/* Add this media query for touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .edit-helmet-name,
+  .nav-item,
+  .edit-helmet-icon {
+    cursor: pointer;
+    /* Increase padding for better touch targets */
+    padding: 12px 20px;
+  }
+  
+  /* Remove hover effects that might interfere with touch */
+  .edit-helmet-name:hover,
+  .nav-item:hover,
+  .edit-helmet-icon:hover {
+    transform: none;
+  }
+}
+
+/* Update helmet container to not block clicks */
+.helmet-container {
+  /* ... existing styles ... */
+  pointer-events: none;  /* Add this */
+}
+
+/* But allow pointer events on specific elements inside helmet container */
+.helmet-section,
+.helmet-name-wrapper,
+.edit-helmet-icon,
+.nav-item,
+.helmet-name-form {
+  pointer-events: auto;
+}
+
+/* Ensure the bubble background doesn't interfere with clicks */
+.bubble-background {
+  /* ... existing styles ... */
+  pointer-events: none;
+}
+
+.bubble {
+  /* ... existing styles ... */
+  pointer-events: none;
 }
