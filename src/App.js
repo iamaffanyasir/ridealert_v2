@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react';
 import './App.css';
+import EditDetails from './pages/EditDetails';
+import { localDB } from './utils/localDB';
 
-function Navbar() {
+function Navbar({ onEditDetailsClick, theme, onThemeToggle }) {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <h1>RideAlert</h1>
+        <h1 onClick={() => onEditDetailsClick('home')}>RideAlert</h1>
       </div>
-      <div className="navbar-menu">
-        <button className="nav-item">My Device</button>
-        <button className="nav-item">Edit Details</button>
-        <button className="nav-item">Navigation</button>
-      </div>
+      <button onClick={onThemeToggle} className="theme-toggle">
+        <span className="material-icons">
+          {theme === 'dark' ? 'light_mode' : 'dark_mode'}
+        </span>
+      </button>
     </nav>
   );
 }
@@ -159,25 +161,98 @@ function EmergencyContactForm({ onSubmit }) {
   );
 }
 
+function BluetoothPairingModal({ onClose }) {
+  const [isScanning, setIsScanning] = useState(false);
+  const [error, setError] = useState(null);
+  const [device, setDevice] = useState(null);
+
+  const startScanning = async () => {
+    try {
+      setIsScanning(true);
+      setError(null);
+
+      // Request Bluetooth device without filters to see all available devices
+      const bluetoothDevice = await navigator.bluetooth.requestDevice({
+        acceptAllDevices: true,
+        optionalServices: ['battery_service', '0000180f-0000-1000-8000-00805f9b34fb']
+      });
+
+      setDevice(bluetoothDevice);
+
+      // Add event listener for when device gets disconnected
+      bluetoothDevice.addEventListener('gattserverdisconnected', () => {
+        setDevice(null);
+        setError('Device disconnected');
+      });
+
+      // Try to connect to the device
+      const server = await bluetoothDevice.gatt.connect();
+      console.log('Connected to GATT server:', server);
+
+      onClose();
+    } catch (err) {
+      console.error('Bluetooth Error:', err);
+      setError(err.message);
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content bluetooth-modal">
+        <h2>Bluetooth Pairing</h2>
+        {error && <p className="error-message">{error}</p>}
+        {device ? (
+          <div className="device-info">
+            <p>Connected to: {device.name}</p>
+            <p>ID: {device.id}</p>
+          </div>
+        ) : (
+          <>
+            <p>Click the button below to scan for nearby RideAlert devices</p>
+            <button 
+              onClick={startScanning} 
+              className="scan-btn"
+              disabled={isScanning}
+            >
+              {isScanning ? 'Scanning...' : 'Start Scan'}
+            </button>
+          </>
+        )}
+        <button onClick={onClose} className="close-btn">Close</button>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [loading, setLoading] = useState(true);
   const [currentPermission, setCurrentPermission] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [showEmergencyForm, setShowEmergencyForm] = useState(false);
-  const [userDetails, setUserDetails] = useState(null);
-  const [emergencyContact, setEmergencyContact] = useState(null);
-  const [permissions, setPermissions] = useState({
-    bluetooth: false,
-    phone: false,
-    sms: false
-  });
-  const [helmetName, setHelmetName] = useState("Smart Helmet X1");
+  const [userDetails, setUserDetails] = useState(() => localDB.getUserDetails());
+  const [emergencyContact, setEmergencyContact] = useState(() => localDB.getEmergencyContact());
+  const [permissions, setPermissions] = useState(() => localDB.getPermissions());
+  const [helmetName, setHelmetName] = useState(() => localDB.getHelmetName());
   const [editingHelmetName, setEditingHelmetName] = useState(false);
+  const [showBluetoothModal, setShowBluetoothModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState('home');
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+
+  // Check if user has already completed setup
+  const hasCompletedSetup = () => {
+    return localDB.getUserDetails() !== null && 
+           localDB.getEmergencyContact() !== null;
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-      setCurrentPermission('bluetooth');
+      // Only show permission modal if setup hasn't been completed
+      if (!hasCompletedSetup()) {
+        setCurrentPermission('bluetooth');
+      }
     }, 1500);
 
     return () => clearTimeout(timer);
@@ -185,10 +260,13 @@ function App() {
 
   const requestBluetoothPermission = async () => {
     try {
-      // Request Bluetooth device
-      await navigator.bluetooth.requestDevice({
-        acceptAllDevices: true
-      });
+      // Check if Web Bluetooth API is available
+      if (!navigator.bluetooth) {
+        throw new Error('Web Bluetooth API is not available in your browser');
+      }
+      
+      // Just check if we can get the Bluetooth permission
+      await navigator.bluetooth.getAvailability();
       return true;
     } catch (error) {
       console.error('Bluetooth permission error:', error);
@@ -224,19 +302,24 @@ function App() {
           break;
       }
 
-      setPermissions(prev => ({
-        ...prev,
+      const newPermissions = {
+        ...permissions,
         [permission]: permissionGranted
-      }));
+      };
+      
+      setPermissions(newPermissions);
+      localDB.savePermissions(newPermissions); // Save to localStorage
 
       if (!permissionGranted) {
         alert(`Could not get ${permission} permission. Please check your browser settings.`);
       }
     } else {
-      setPermissions(prev => ({
-        ...prev,
+      const newPermissions = {
+        ...permissions,
         [permission]: false
-      }));
+      };
+      setPermissions(newPermissions);
+      localDB.savePermissions(newPermissions); // Save to localStorage
     }
 
     // Move to next permission or show form
@@ -258,13 +341,15 @@ function App() {
 
   const handleFormSubmit = (formData) => {
     setUserDetails(formData);
+    localDB.saveUserDetails(formData); // Save to localStorage
     setShowForm(false);
-    setShowEmergencyForm(true); // Show emergency contact form after user details
+    setShowEmergencyForm(true);
     console.log('Form submitted:', formData);
   };
 
   const handleEmergencyFormSubmit = (formData) => {
     setEmergencyContact(formData);
+    localDB.saveEmergencyContact(formData); // Save to localStorage
     setShowEmergencyForm(false);
     console.log('Emergency contact submitted:', formData);
   };
@@ -294,23 +379,52 @@ function App() {
   const handleHelmetNameSubmit = (e) => {
     e.preventDefault();
     setEditingHelmetName(false);
+    localDB.saveHelmetName(helmetName); // Save to localStorage
   };
 
-  if (loading) {
-    return (
-      <div className="loading-screen">
-        <h1>RideAlert</h1>
-        <div className="loading-bar">
-          <div className="loading-progress"></div>
-        </div>
-      </div>
-    );
-  }
+  const handleBluetoothClick = () => {
+    setShowBluetoothModal(true);
+  };
+
+  const handleSignOut = () => {
+    localDB.clearAllData();
+    setUserDetails(null);
+    setEmergencyContact(null);
+    setPermissions({
+      bluetooth: false,
+      phone: false,
+      sms: false
+    });
+    setHelmetName("Smart Helmet X1");
+    // Additional cleanup if needed
+  };
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+  };
+
+  // Add this useEffect for theme
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  // Add this near the top of your App component
+  useEffect(() => {
+    // Set initial theme
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   return (
     <div className="App">
-      <Navbar />
-      {currentPermission && (
+      <Navbar 
+        onEditDetailsClick={setCurrentPage}
+        theme={theme}
+        onThemeToggle={toggleTheme}
+      />
+      {!hasCompletedSetup() && currentPermission && (
         <PermissionModal
           {...getPermissionContent()}
           onAccept={() => handlePermission(currentPermission, true)}
@@ -318,85 +432,80 @@ function App() {
         />
       )}
 
-      {showForm && <UserDetailsForm onSubmit={handleFormSubmit} />}
+      {!hasCompletedSetup() && showForm && <UserDetailsForm onSubmit={handleFormSubmit} />}
       
-      {showEmergencyForm && <EmergencyContactForm onSubmit={handleEmergencyFormSubmit} />}
+      {!hasCompletedSetup() && showEmergencyForm && <EmergencyContactForm onSubmit={handleEmergencyFormSubmit} />}
 
-      {!currentPermission && !showForm && !showEmergencyForm && userDetails && (
-        <>
-          <div className="helmet-container">
-            <div className="bubble-background">
-              {[...Array(20)].map((_, i) => (
-                <div key={i} className="bubble" style={{
-                  '--delay': `${Math.random() * 4}s`,
-                  '--position': `${Math.random() * 100}%`
-                }}></div>
-              ))}
-            </div>
-            <div className="helmet-section">
-              <img 
-                src="/helmet.png" 
-                alt="Smart Helmet" 
-                className="helmet-image"
-              />
-              <div className="helmet-name-container">
-                {editingHelmetName ? (
-                  <form onSubmit={handleHelmetNameSubmit} className="helmet-name-form">
-                    <input
-                      type="text"
-                      value={helmetName}
-                      onChange={(e) => setHelmetName(e.target.value)}
-                      className="helmet-name-input"
-                      autoFocus
-                    />
-                    <button type="submit" className="helmet-name-save">Save</button>
-                  </form>
-                ) : (
-                  <div className="helmet-name-wrapper">
-                    <h2 className="helmet-name">{helmetName}</h2>
-                    <button 
-                      onClick={() => setEditingHelmetName(true)}
-                      className="edit-helmet-icon"
-                      aria-label="Edit helmet name"
-                    >
-                      <i className="fa-solid fa-pencil"></i>
+      {(hasCompletedSetup() || (!currentPermission && !showForm && !showEmergencyForm && userDetails)) && (
+        currentPage === 'home' ? (
+          <>
+            <div className="helmet-container">
+              <div className="bubble-background">
+                {[...Array(60)].map((_, i) => (  // Increased from 40 to 60 bubbles
+                  <div 
+                    key={i} 
+                    className="bubble" 
+                    style={{
+                      '--delay': `${Math.random() * 5}s`,  // Random delay for more natural effect
+                      animationDelay: `${Math.random() * 5}s`  // Add explicit animation delay
+                    }}
+                  />
+                ))}
+              </div>
+              <div className="helmet-section">
+                <img 
+                  src="/helmet.png" 
+                  alt="Smart Helmet" 
+                  className="helmet-image"
+                />
+                <div className="helmet-name-container">
+                  {editingHelmetName ? (
+                    <form onSubmit={handleHelmetNameSubmit} className="helmet-name-form">
+                      <input
+                        type="text"
+                        value={helmetName}
+                        onChange={(e) => setHelmetName(e.target.value)}
+                        className="helmet-name-input"
+                        autoFocus
+                      />
+                      <button type="submit" className="helmet-name-save">Save</button>
+                    </form>
+                  ) : (
+                    <div className="helmet-name-wrapper">
+                      <h2 className="helmet-name">{helmetName}</h2>
+                      <button 
+                        onClick={() => setEditingHelmetName(true)}
+                        className="edit-helmet-icon"
+                        aria-label="Edit helmet name"
+                      >
+                        <span className="material-icons">edit</span>
+                      </button>
+                    </div>
+                  )}
+                  {/* Add the navigation buttons here */}
+                  <div className="helmet-nav-buttons">
+                    <button onClick={handleBluetoothClick} className="nav-item">
+                      Connect Device
                     </button>
+                    <button onClick={() => setCurrentPage('editDetails')} className="nav-item">
+                      Edit Details
+                    </button>
+                    <button className="nav-item">Navigation</button>
                   </div>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="dashboard-container">
-            <div className="info-box permissions-box">
-              <h3>Permissions Status</h3>
-              <div className="permission-items">
-                <p>Bluetooth: {permissions.bluetooth ? '✅' : '❌'}</p>
-                <p>Phone: {permissions.phone ? '✅' : '❌'}</p>
-                <p>SMS: {permissions.sms ? '✅' : '❌'}</p>
-              </div>
-            </div>
-
-            <div className="info-box user-box">
-              <h3>User Details</h3>
-              <div className="details-content">
-                <p><span>Name:</span> {userDetails.name}</p>
-                <p><span>Email:</span> {userDetails.email}</p>
-                <p><span>Phone:</span> {userDetails.phone}</p>
-                <p><span>Address:</span> {userDetails.address}</p>
-              </div>
-            </div>
-
-            {emergencyContact && (
-              <div className="info-box emergency-box">
-                <h3>Emergency Contact</h3>
-                <div className="details-content">
-                  <p><span>Name:</span> {emergencyContact.emergencyName}</p>
-                  <p><span>Phone:</span> {emergencyContact.emergencyPhone}</p>
                 </div>
               </div>
-            )}
-          </div>
-        </>
+            </div>
+          </>
+        ) : (
+          <EditDetails 
+            permissions={permissions}
+            userDetails={userDetails}
+            emergencyContact={emergencyContact}
+          />
+        )
+      )}
+      {showBluetoothModal && (
+        <BluetoothPairingModal onClose={() => setShowBluetoothModal(false)} />
       )}
     </div>
   );

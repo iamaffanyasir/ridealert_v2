@@ -296,192 +296,113 @@ body {
   margin-top: 1rem;
 }
 
+/* Update styles for all info boxes */
 .info-box {
   flex: 1;
   min-width: 300px;
   max-width: 400px;
-  background-color: #1a1a1a;
+  background: #111111;  /* Lighter shade of black */
   border-radius: 15px;
   padding: 2rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s ease;
+  backdrop-filter: blur(10px);
 }
 
-.info-box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(0, 255, 0, 0.15);
-}
-
-.info-box h3 {
-  color: #ffffff;
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #00ff00;
-}
-
-.permission-items p {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.8rem;
-  background-color: #2a2a2a;
-  margin: 0.5rem 0;
-  border-radius: 8px;
-  font-weight: 500;
-  color: #ffffff;
-}
-
-.details-content p {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.8rem;
-  margin: 0.5rem 0;
-  background-color: #2a2a2a;
-  border-radius: 8px;
-  color: #ffffff;
-}
-
-.details-content p span {
-  font-weight: 600;
-  color: #00ff00;
-}
-
-/* Specific styles for each box */
+/* Specific styles for each box with updated backgrounds */
 .permissions-box {
-  border-top: 4px solid #00ff00;
+  border-top: none;
+  background: linear-gradient(145deg, #111111, #151515);
 }
 
 .user-box {
-  border-top: 4px solid #0088ff;
+  border-top: none;
+  background: linear-gradient(145deg, #111111, #151515);
 }
 
 .emergency-box {
-  border-top: 4px solid #ff0000;
+  border-top: none;
+  background: linear-gradient(145deg, #111111, #151515);
 }
 
-/* Make sure the boxes stack nicely on mobile */
-@media (max-width: 1024px) {
-  .dashboard-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .info-box {
-    width: 100%;
-    max-width: 500px;
-  }
+/* Specific styles for each box */
+.user-box {
+  border-top: none;
+  background: rgba(0, 136, 255, 0.05);  /* Subtle blue tint */
 }
 
+.user-box h3 {
+  font-size: 1.3rem;
+  color: #0088ff;
+  margin-bottom: 2rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  border-bottom: none;
+}
+
+.emergency-box {
+  border-top: none;
+  background: rgba(255, 0, 0, 0.05);  /* Subtle red tint */
+}
+
+.emergency-box h3 {
+  font-size: 1.3rem;
+  color: #ff4444;
+  margin-bottom: 2rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  border-bottom: none;
+}
+
+/* Update content styles for all boxes */
+.details-content p {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  margin: 0.5rem 0;
+  background: transparent;
+  color: #ffffff;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  border-left: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+/* Style for user box details */
+.user-box .details-content p {
+  border-left-color: #0088ff;
+}
+
+.user-box .details-content p span {
+  color: #0088ff;
+  font-weight: 500;
+}
+
+/* Style for emergency box details */
+.emergency-box .details-content p {
+  border-left-color: #ff4444;
+}
+
+.emergency-box .details-content p span {
+  color: #ff4444;
+  font-weight: 500;
+}
+
+/* Update hover effects */
 .user-box:hover {
+  transform: translateY(-5px);
   box-shadow: 0 6px 20px rgba(0, 136, 255, 0.15);
 }
 
 .emergency-box:hover {
+  transform: translateY(-5px);
   box-shadow: 0 6px 20px rgba(255, 0, 0, 0.15);
-}
-
-/* Add these navbar styles */
-.navbar {
-  background-color: #1a1a1a;
-  padding: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 2rem;
-}
-
-.navbar-brand {
-  margin-bottom: 1rem;
-}
-
-.navbar-brand h1 {
-  color: #00ff00;
-  font-size: 2.2rem;
-  font-weight: 700;
-  margin: 0;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-.navbar-menu {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-  width: 100%;
-}
-
-.nav-item {
-  background: none;
-  border: none;
-  color: #ffffff;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1rem;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-.nav-item::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background-color: #00ff00;
-  transition: width 0.2s ease;
-}
-
-.nav-item:hover {
-  color: #00ff00;
-}
-
-.nav-item:hover::after {
-  width: 100%;
-}
-
-/* Update existing App style to accommodate navbar */
-.App {
-  text-align: center;
-  min-height: 100vh;
-  background-color: #000000;
-  padding: 0; /* Remove padding from App */
-}
-
-/* Add responsive styles for navbar */
-@media (max-width: 768px) {
-  .navbar-menu {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .nav-item {
-    width: 100%;
-    padding: 0.8rem;
-    border-radius: 8px;
-  }
-  
-  .nav-item:hover {
-    background-color: #2a2a2a;
-  }
-  
-  .nav-item::after {
-    display: none;
-  }
 }
 
 /* Add these new styles for the helmet section and bubbles */
 .helmet-container {
   position: relative;
   width: 100%;
-  height: 700px; /* Increased from 500px to 700px */
+  height: 900px;
   margin-bottom: 2rem;
   overflow: hidden;
   display: flex;
@@ -490,11 +411,12 @@ body {
 }
 
 .helmet-image {
-  width: 500px; /* Increased from 400px to 500px */
+  width: 500px;
   height: auto;
   z-index: 2;
-  filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.4));
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
   animation: float 3s ease-in-out infinite;
+  position: relative;
 }
 
 @keyframes float {
@@ -506,76 +428,143 @@ body {
   }
 }
 
+/* Update bubble styles for more bubbles and larger size */
 .bubble-background {
   position: absolute;
-  top: 0;
+  width: 100%;
+  height: 60%;  /* Reduced from 100% to focus more on upper area */
   left: 0;
-  right: 0;
-  bottom: 0;
+  top: 0;      /* Keep at top */
   overflow: hidden;
+  z-index: 1;
 }
 
 .bubble {
   position: absolute;
-  bottom: -100px; /* Start even lower */
-  background: radial-gradient(circle at center, 
-    rgba(0, 255, 0, 0.15) 0%,
-    rgba(0, 136, 255, 0.15) 50%,
-    rgba(255, 0, 0, 0.15) 100%
-  );
   border-radius: 50%;
-  animation: rise var(--duration, 8s) ease-in infinite;
-  left: var(--position, 50%);
-  animation-delay: var(--delay, 0s);
-  filter: blur(3px);
+  transform-origin: center;
+  filter: blur(8px);
+  mix-blend-mode: screen;
+  animation: pulse var(--duration, 4s) infinite;
 }
 
-@keyframes rise {
+/* Different colored bubbles with positions around the helmet */
+.bubble:nth-child(4n) {
+  width: 120px;
+  height: 120px;
+  top: 30%;
+  left: calc(50% + 200px);
+  background: radial-gradient(circle at center, 
+    rgba(0, 255, 255, 0.4) 0%,    /* Reduced from 0.8 */
+    rgba(0, 255, 255, 0.2) 50%,   /* Reduced from 0.4 */
+    rgba(0, 255, 255, 0.05) 100%
+  );
+  --duration: 4s;  /* Increased from 3s */
+}
+
+.bubble:nth-child(4n + 1) {
+  width: 100px;
+  height: 100px;
+  top: 20%;
+  left: calc(50% - 250px);
+  background: radial-gradient(circle at center, 
+    rgba(255, 0, 255, 0.4) 0%,    /* Reduced from 0.8 */
+    rgba(255, 0, 255, 0.2) 50%,   /* Reduced from 0.4 */
+    rgba(255, 0, 255, 0.05) 100%
+  );
+  --duration: 5s;  /* Increased from 4s */
+}
+
+.bubble:nth-child(4n + 2) {
+  width: 150px;
+  height: 150px;
+  top: 35%;
+  left: calc(50% - 180px);
+  background: radial-gradient(circle at center, 
+    rgba(255, 255, 0, 0.4) 0%,    /* Reduced from 0.8 */
+    rgba(255, 255, 0, 0.2) 50%,   /* Reduced from 0.4 */
+    rgba(255, 255, 0, 0.05) 100%
+  );
+  --duration: 6s;  /* Increased from 5s */
+}
+
+.bubble:nth-child(4n + 3) {
+  width: 80px;
+  height: 80px;
+  top: 25%;
+  left: calc(50% + 150px);
+  background: radial-gradient(circle at center, 
+    rgba(255, 0, 0, 0.4) 0%,      /* Reduced from 0.8 */
+    rgba(255, 0, 0, 0.2) 50%,     /* Reduced from 0.4 */
+    rgba(255, 0, 0, 0.05) 100%
+  );
+  --duration: 4.5s;  /* Increased from 3.5s */
+}
+
+/* Update pulse animation to be slower */
+@keyframes pulse {
   0% {
-    transform: scale(0.5) translateY(0);
+    transform: scale(0.3);
     opacity: 0;
   }
-  20% {
-    opacity: 0.8;
+  50% {
+    transform: scale(1.5);
+    opacity: 0.6;  /* Reduced from 0.8 */
   }
   100% {
-    transform: scale(3) translateY(-400px); /* Increased rise height */
+    transform: scale(0.3);
     opacity: 0;
   }
 }
 
-/* Update bubble sizes */
-.bubble:nth-child(3n) {
-  width: 150px; /* Increased from 100px */
-  height: 150px;
-  --duration: 10s;
+/* Add more bubble variations for better coverage */
+.bubble:nth-child(8n + 5) {
+  top: 15%;    /* Moved up */
+  left: calc(50% + 100px);
 }
 
-.bubble:nth-child(3n + 1) {
-  width: 120px; /* Increased from 80px */
-  height: 120px;
-  --duration: 9s;
+.bubble:nth-child(8n + 6) {
+  top: 40%;    /* Moved up */
+  left: calc(50% + 180px);
 }
 
-.bubble:nth-child(3n + 2) {
-  width: 180px; /* Increased from 120px */
-  height: 180px;
-  --duration: 11s;
+.bubble:nth-child(8n + 7) {
+  top: 20%;    /* Moved up */
+  left: calc(50% - 150px);
 }
 
-/* Remove the bubble::before pseudo-element since we're using filter: blur */
-.bubble::before {
-  display: none;
+.bubble:nth-child(8n + 8) {
+  top: 30%;    /* Moved up */
+  left: calc(50% - 220px);
+}
+
+/* Update glow effect behind helmet */
+.helmet-section::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle at center,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.1) 30%,
+    transparent 70%
+  );
+  z-index: 1;
+  filter: blur(30px);
 }
 
 /* Add responsive sizing for mobile devices */
 @media (max-width: 768px) {
   .helmet-container {
-    height: 500px;
+    height: 1000px;  /* Even more height for mobile due to stacked buttons */
   }
   
   .helmet-image {
     width: 350px;
+    margin-top: -100px;  /* Move helmet up a bit on mobile */
   }
 }
 
@@ -716,3 +705,664 @@ body {
 .edit-helmet-icon:hover i {
   transform: scale(1.1);
 }
+
+/* Bluetooth Modal Styles */
+.bluetooth-modal {
+  max-width: 400px;
+}
+
+.bluetooth-modal .error-message {
+  color: #ff4444;
+  background: rgba(255, 0, 0, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.scan-btn {
+  background: linear-gradient(45deg, #00ff00, #00cc00);
+  color: black;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 1rem 0;
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.scan-btn:disabled {
+  background: #333;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.scan-btn:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 255, 0, 0.3);
+}
+
+.close-btn {
+  background: transparent;
+  border: 2px solid #666;
+  color: #666;
+  padding: 0.8rem 2rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.close-btn:hover {
+  background: #666;
+  color: black;
+}
+
+.device-info {
+  background: rgba(0, 255, 0, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.device-info p {
+  color: #00ff00;
+  margin: 0.5rem 0;
+}
+
+/* Permission Status Box Styles */
+.permissions-box {
+  border-top: none;
+  background: rgba(0, 255, 0, 0.05);
+}
+
+.permissions-box h3 {
+  font-size: 1.3rem;
+  color: #00ff00;
+  margin-bottom: 2rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  border-bottom: none;
+}
+
+.permission-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.permission-items p {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: transparent;
+  margin: 0;
+  color: #ffffff;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  border-left: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+/* Style based on permission status */
+.permission-items p.granted {
+  border-left-color: #00ff00;
+  color: #00ff00;
+}
+
+.permission-items p.denied {
+  border-left-color: #ff4444;
+  color: #ff4444;
+}
+
+.permissions-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 255, 0, 0.15);
+}
+
+/* Navbar styles */
+.navbar {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 60%,
+    rgba(0, 0, 0, 0.8) 80%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  color: white;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  backdrop-filter: blur(5px);
+  border-bottom: 1px solid rgba(51, 51, 51, 0.3);
+}
+
+.navbar-brand {
+  margin: 0;
+}
+
+.navbar-brand h1 {
+  color: #00ff00;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+  background: linear-gradient(45deg, #00ff00, #00cc00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.navbar-brand h1:hover {
+  text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+  transform: scale(1.05);
+}
+
+.navbar-brand h1::after {
+  content: 'RideAlert';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(0, 255, 0, 0.3);
+  z-index: -1;
+}
+
+.navbar-menu {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-item {
+  color: #00ff00;
+  background: rgba(0, 255, 0, 0.1);
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 255, 0, 0.2);
+}
+
+/* Add ripple effect */
+.nav-item::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(0, 255, 0, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease-out, height 0.6s ease-out;
+}
+
+.nav-item:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.nav-item:hover {
+  background: rgba(0, 255, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 255, 0, 0.3);
+}
+
+.nav-item:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 5px rgba(0, 255, 0, 0.2);
+}
+
+/* Add hover glow effect */
+.nav-item::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 8px;
+  background: linear-gradient(45deg, #00ff00, #00cc00);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nav-item:hover::after {
+  opacity: 0.3;
+}
+
+/* Add responsive styles for navbar */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .navbar-menu {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .nav-item {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Edit Details Page Styles */
+.edit-details-page {
+  padding: 2rem;
+}
+
+.page-title {
+  color: #00ff00;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 600;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+/* Update dashboard container for edit details page */
+.edit-details-page .dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Add these styles for the edit buttons in boxes */
+.box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.box-header h3 {
+  margin-bottom: 0;
+}
+
+.edit-box-btn {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+/* Specific colors for each box's edit button */
+.permissions-box .edit-box-btn {
+  color: #00ff00;
+  background: rgba(0, 255, 0, 0.1);
+}
+
+.permissions-box .edit-box-btn:hover {
+  background: rgba(0, 255, 0, 0.2);
+  transform: rotate(15deg);
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+}
+
+.user-box .edit-box-btn {
+  color: #0088ff;
+  background: rgba(0, 136, 255, 0.1);
+}
+
+.user-box .edit-box-btn:hover {
+  background: rgba(0, 136, 255, 0.2);
+  transform: rotate(15deg);
+  box-shadow: 0 0 15px rgba(0, 136, 255, 0.3);
+}
+
+.emergency-box .edit-box-btn {
+  color: #ff4444;
+  background: rgba(255, 68, 68, 0.1);
+}
+
+.emergency-box .edit-box-btn:hover {
+  background: rgba(255, 68, 68, 0.2);
+  transform: rotate(15deg);
+  box-shadow: 0 0 15px rgba(255, 68, 68, 0.3);
+}
+
+/* Add styles for the new button container */
+.helmet-nav-buttons {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Update helmet name container to accommodate buttons */
+.helmet-name-container {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .helmet-nav-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+
+  .nav-item {
+    width: 100%;
+  }
+}
+
+/* Theme toggle button styles */
+.theme-toggle {
+  background: transparent;
+  border: none;
+  color: #00ff00;
+  font-size: 1.5rem;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-toggle::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 255, 0, 0.1);
+  border-radius: 50%;
+  transform: scale(0);
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover::before {
+  transform: scale(1);
+}
+
+.theme-toggle:hover {
+  transform: rotate(15deg);
+}
+
+/* Theme variables - Update with black and white scheme */
+:root[data-theme="light"] {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --box-bg: #f5f5f5;
+  --border-color: #e0e0e0;
+  --accent-color: #000000;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --navbar-bg: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 1) 60%,
+    rgba(255, 255, 255, 0.8) 80%,
+    rgba(255, 255, 255, 0.6) 100%
+  );
+  --button-bg: rgba(0, 0, 0, 0.1);
+  --button-hover: rgba(0, 0, 0, 0.2);
+  --button-text: #000000;
+}
+
+:root[data-theme="dark"] {
+  --bg-color: #000000;
+  --text-color: #ffffff;
+  --box-bg: #111111;
+  --border-color: #333333;
+  --accent-color: #ffffff;
+  --shadow-color: rgba(255, 255, 255, 0.1);
+  --navbar-bg: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 60%,
+    rgba(0, 0, 0, 0.8) 80%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  --button-bg: rgba(255, 255, 255, 0.1);
+  --button-hover: rgba(255, 255, 255, 0.2);
+  --button-text: #ffffff;
+}
+
+/* Update these styles to use CSS variables */
+.App {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.navbar {
+  background: var(--navbar-bg);
+  color: var(--text-color);
+}
+
+.info-box {
+  background: var(--box-bg);
+  border-color: var(--border-color);
+}
+
+.modal-content {
+  background-color: var(--box-bg);
+  color: var(--text-color);
+}
+
+.form-group label {
+  color: var(--text-color);
+}
+
+.form-group input,
+.form-group textarea {
+  background-color: var(--box-bg);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+.details-content p {
+  color: var(--text-color);
+}
+
+/* Remove the commented useEffect code from the CSS file */
+
+/* Update icon styles */
+.material-icons {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.edit-helmet-icon .material-icons {
+  font-size: 20px;
+}
+
+.edit-box-btn .material-icons {
+  font-size: 20px;
+}
+
+.theme-toggle .material-icons {
+  font-size: 24px;
+}
+
+/* Add transition properties to root */
+:root {
+  --transition-speed: 0.3s;
+}
+
+/* Add transition properties to elements that change with theme */
+.App {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color var(--transition-speed) ease,
+              color var(--transition-speed) ease;
+}
+
+.navbar {
+  background: var(--navbar-bg);
+  color: var(--text-color);
+  transition: background var(--transition-speed) ease,
+              color var(--transition-speed) ease;
+}
+
+.info-box {
+  background: var(--box-bg);
+  border-color: var(--border-color);
+  transition: background-color var(--transition-speed) ease,
+              border-color var(--transition-speed) ease,
+              box-shadow var(--transition-speed) ease;
+}
+
+.modal-content {
+  background-color: var(--box-bg);
+  color: var(--text-color);
+  transition: background-color var(--transition-speed) ease,
+              color var(--transition-speed) ease;
+}
+
+.form-group label,
+.form-group input,
+.form-group textarea,
+.details-content p {
+  transition: background-color var(--transition-speed) ease,
+              color var(--transition-speed) ease,
+              border-color var(--transition-speed) ease;
+}
+
+/* Add transition to theme toggle button */
+.theme-toggle {
+  transition: transform 0.5s ease;
+}
+
+.theme-toggle .material-icons {
+  transition: transform 0.5s ease;
+}
+
+.theme-toggle:hover .material-icons {
+  transform: rotate(180deg);
+}
+
+/* Update existing color references */
+.navbar-brand h1 {
+  color: var(--text-color);
+  text-shadow: 0 0 10px var(--shadow-color);
+  background: var(--text-color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.theme-toggle {
+  color: var(--text-color);
+}
+
+.nav-item {
+  color: var(--text-color);
+  background: var(--button-bg);
+  box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+.nav-item:hover {
+  background: var(--button-hover);
+}
+
+.helmet-name {
+  color: var(--text-color);
+  text-shadow: 0 0 10px var(--shadow-color);
+}
+
+.edit-helmet-icon {
+  color: var(--text-color);
+  background: var(--button-bg);
+  border-color: var(--border-color);
+}
+
+.bubble {
+  background: radial-gradient(circle at center, 
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+}
+
+/* Update permission status colors */
+.permission-items p.granted {
+  border-left-color: var(--text-color);
+  color: var(--text-color);
+}
+
+.permission-items p.denied {
+  border-left-color: #666666;
+  color: #666666;
+}
+
+/* Update edit buttons */
+.edit-box-btn {
+  color: var(--text-color);
+  background: var(--button-bg);
+}
+
+.edit-box-btn:hover {
+  background: var(--button-hover);
+}
+
+/* Update box headers */
+.permissions-box h3,
+.user-box h3,
+.emergency-box h3 {
+  color: var(--text-color);
+}
+
+/* Update form inputs */
+.helmet-name-input {
+  background-color: var(--box-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.helmet-name-save {
+  background-color: var(--button-bg);
+  color: var(--text-color);
+}
+
+/* Update box details */
+.details-content p span {
+  color: var(--text-color);
+}
+
+/* Update page title */
+.page-title {
+  color: var(--text-color);
+  text-shadow: 0 0 10px var(--shadow-color);
+}
+
