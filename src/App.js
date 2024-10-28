@@ -33,12 +33,12 @@ function PermissionModal({ title, message, onAccept, onDeny }) {
   );
 }
 
-function UserDetailsForm({ onSubmit }) {
+function UserDetailsForm({ onSubmit, onCancel, initialData }) {
   const [formData, setFormData] = useState({
-    name: '',
-    address: '',
-    email: '',
-    phone: ''
+    name: initialData?.name || '',
+    address: initialData?.address || '',
+    email: initialData?.email || '',
+    phone: initialData?.phone || ''
   });
 
   const handleChange = (e) => {
@@ -56,7 +56,7 @@ function UserDetailsForm({ onSubmit }) {
   return (
     <div className="modal-overlay">
       <div className="modal-content form-content">
-        <h2>User Details</h2>
+        <h2>RideAlert</h2>  {/* Changed from "User Details" */}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="name">Name</label>
@@ -101,17 +101,20 @@ function UserDetailsForm({ onSubmit }) {
               required
             />
           </div>
-          <button type="submit" className="submit-btn">Submit</button>
+          <div className="form-buttons">
+            <button type="button" onClick={onCancel} className="cancel-btn">Cancel</button>
+            <button type="submit" className="submit-btn">Submit</button>
+          </div>
         </form>
       </div>
     </div>
   );
 }
 
-function EmergencyContactForm({ onSubmit }) {
+function EmergencyContactForm({ onSubmit, onCancel, initialData }) {
   const [formData, setFormData] = useState({
-    emergencyName: '',
-    emergencyPhone: ''
+    emergencyName: initialData?.emergencyName || '',
+    emergencyPhone: initialData?.emergencyPhone || ''
   });
 
   const handleChange = (e) => {
@@ -129,7 +132,7 @@ function EmergencyContactForm({ onSubmit }) {
   return (
     <div className="modal-overlay">
       <div className="modal-content form-content">
-        <h2>Emergency Contact</h2>
+        <h2>RideAlert</h2>  {/* Changed from "Emergency Contact" */}
         <p className="form-subtitle">Please provide emergency contact details</p>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -154,7 +157,10 @@ function EmergencyContactForm({ onSubmit }) {
               required
             />
           </div>
-          <button type="submit" className="submit-btn">Submit</button>
+          <div className="form-buttons">
+            <button type="button" onClick={onCancel} className="cancel-btn">Cancel</button>
+            <button type="submit" className="submit-btn">Submit</button>
+          </div>
         </form>
       </div>
     </div>
@@ -239,6 +245,8 @@ function App() {
   const [showBluetoothModal, setShowBluetoothModal] = useState(false);
   const [currentPage, setCurrentPage] = useState('home');
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+  const [showNavigationInput, setShowNavigationInput] = useState(false);
+  const [destination, setDestination] = useState('');
 
   // Check if user has already completed setup
   const hasCompletedSetup = () => {
@@ -284,6 +292,21 @@ function App() {
     }
   };
 
+  const handleFormSubmit = (formData) => {
+    setUserDetails(formData);
+    localDB.saveUserDetails(formData);
+    setShowForm(false);
+    setShowEmergencyForm(true);
+    console.log('User details saved:', formData);
+  };
+
+  const handleEmergencyFormSubmit = (formData) => {
+    setEmergencyContact(formData);
+    localDB.saveEmergencyContact(formData);
+    setShowEmergencyForm(false);
+    console.log('Emergency contact saved:', formData);
+  };
+
   const handlePermission = async (permission, accepted) => {
     if (accepted) {
       let permissionGranted = false;
@@ -308,7 +331,7 @@ function App() {
       };
       
       setPermissions(newPermissions);
-      localDB.savePermissions(newPermissions); // Save to localStorage
+      localDB.savePermissions(newPermissions);
 
       if (!permissionGranted) {
         alert(`Could not get ${permission} permission. Please check your browser settings.`);
@@ -319,10 +342,9 @@ function App() {
         [permission]: false
       };
       setPermissions(newPermissions);
-      localDB.savePermissions(newPermissions); // Save to localStorage
+      localDB.savePermissions(newPermissions);
     }
 
-    // Move to next permission or show form
     switch (permission) {
       case 'bluetooth':
         setCurrentPermission('phone');
@@ -332,26 +354,11 @@ function App() {
         break;
       case 'sms':
         setCurrentPermission(null);
-        setShowForm(true); // Show form after all permissions are handled
+        setShowForm(true);
         break;
       default:
         break;
     }
-  };
-
-  const handleFormSubmit = (formData) => {
-    setUserDetails(formData);
-    localDB.saveUserDetails(formData); // Save to localStorage
-    setShowForm(false);
-    setShowEmergencyForm(true);
-    console.log('Form submitted:', formData);
-  };
-
-  const handleEmergencyFormSubmit = (formData) => {
-    setEmergencyContact(formData);
-    localDB.saveEmergencyContact(formData); // Save to localStorage
-    setShowEmergencyForm(false);
-    console.log('Emergency contact submitted:', formData);
   };
 
   const getPermissionContent = () => {
@@ -417,6 +424,40 @@ function App() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
+  // Update EditDetails handlers
+  const handleUpdateUserDetails = (data) => {
+    setUserDetails(data);
+    localDB.saveUserDetails(data);
+    console.log('User details updated:', data);
+  };
+
+  const handleUpdateEmergencyContact = (data) => {
+    setEmergencyContact(data);
+    localDB.saveEmergencyContact(data);
+    console.log('Emergency contact updated:', data);
+  };
+
+  const handleUpdatePermissions = (newPermissions) => {
+    setPermissions(newPermissions);
+    localDB.savePermissions(newPermissions);
+    console.log('Permissions updated:', newPermissions);
+  };
+
+  const handleNavigationClick = () => {
+    setShowNavigationInput(true);
+  };
+
+  const handleNavigationSubmit = (e) => {
+    e.preventDefault();
+    if (destination.trim()) {
+      // Open Google Maps with the destination
+      const encodedDestination = encodeURIComponent(destination);
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodedDestination}`, '_blank');
+      setShowNavigationInput(false);
+      setDestination('');
+    }
+  };
+
   return (
     <div className="App">
       <Navbar 
@@ -432,9 +473,9 @@ function App() {
         />
       )}
 
-      {!hasCompletedSetup() && showForm && <UserDetailsForm onSubmit={handleFormSubmit} />}
+      {!hasCompletedSetup() && showForm && <UserDetailsForm onSubmit={handleFormSubmit} onCancel={() => setShowForm(false)} initialData={userDetails} />}
       
-      {!hasCompletedSetup() && showEmergencyForm && <EmergencyContactForm onSubmit={handleEmergencyFormSubmit} />}
+      {!hasCompletedSetup() && showEmergencyForm && <EmergencyContactForm onSubmit={handleEmergencyFormSubmit} onCancel={() => setShowEmergencyForm(false)} initialData={emergencyContact} />}
 
       {(hasCompletedSetup() || (!currentPermission && !showForm && !showEmergencyForm && userDetails)) && (
         currentPage === 'home' ? (
@@ -490,7 +531,25 @@ function App() {
                     <button onClick={() => setCurrentPage('editDetails')} className="nav-item">
                       Edit Details
                     </button>
-                    <button className="nav-item">Navigation</button>
+                    {showNavigationInput ? (
+                      <form onSubmit={handleNavigationSubmit} className="navigation-form">
+                        <input
+                          type="text"
+                          value={destination}
+                          onChange={(e) => setDestination(e.target.value)}
+                          placeholder="Enter destination..."
+                          className="navigation-input"
+                          autoFocus
+                        />
+                        <button type="submit" className="navigation-search-btn">
+                          <span className="material-icons">search</span>
+                        </button>
+                      </form>
+                    ) : (
+                      <button onClick={handleNavigationClick} className="nav-item">
+                        Navigation
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -501,6 +560,12 @@ function App() {
             permissions={permissions}
             userDetails={userDetails}
             emergencyContact={emergencyContact}
+            PermissionModal={PermissionModal}
+            UserDetailsForm={UserDetailsForm}
+            EmergencyContactForm={EmergencyContactForm}
+            onUpdateUserDetails={handleUpdateUserDetails}
+            onUpdateEmergencyContact={handleUpdateEmergencyContact}
+            onUpdatePermissions={handleUpdatePermissions}
           />
         )
       )}

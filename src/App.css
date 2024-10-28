@@ -13,8 +13,10 @@ body {
 .App {
   text-align: center;
   min-height: 100vh;
-  background-color: #000000;
-  padding: 0; /* Remove padding from App */
+  background-color: var(--bg-color);
+  padding: 0;
+  margin: 0;
+  overflow: hidden;  /* Add this to prevent any overflow */
 }
 
 /* Loading Screen Styles */
@@ -403,11 +405,12 @@ body {
   position: relative;
   width: 100%;
   height: 900px;
-  margin-bottom: 2rem;
+  margin-bottom: 0;  /* Changed from 2rem to 0 */
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
+  border: none;  /* Add this to ensure no border */
 }
 
 .helmet-image {
@@ -455,9 +458,9 @@ body {
   top: 30%;
   left: calc(50% + 200px);
   background: radial-gradient(circle at center, 
-    rgba(0, 255, 255, 0.4) 0%,    /* Reduced from 0.8 */
-    rgba(0, 255, 255, 0.2) 50%,   /* Reduced from 0.4 */
-    rgba(0, 255, 255, 0.05) 100%
+    rgba(102, 179, 255, 0.4) 0%,
+    rgba(102, 179, 255, 0.2) 50%,
+    rgba(102, 179, 255, 0.05) 100%
   );
   --duration: 4s;  /* Increased from 3s */
 }
@@ -585,10 +588,10 @@ body {
 }
 
 .helmet-name {
-  color: #00ff00;
+  color: var(--accent-color);  /* Changed from #00ff00 */
   font-size: 1.8rem;
   font-weight: 600;
-  text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+  text-shadow: 0 0 10px rgba(102, 179, 255, 0.3);  /* Changed from green to blue */
   margin: 0;
 }
 
@@ -670,16 +673,16 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: rgba(0, 255, 0, 0.1);
+  background: var(--button-bg);  /* Changed from green to variable */
   padding: 0.8rem 1.5rem;
   border-radius: 30px;
-  border: 1px solid rgba(0, 255, 0, 0.2);
+  border: 1px solid var(--border-color);
 }
 
 .edit-helmet-icon {
-  background: rgba(0, 255, 0, 0.1);
-  border: 1px solid rgba(0, 255, 0, 0.3);
-  color: #00ff00;
+  background: var(--button-bg);
+  border: 1px solid var(--border-color);
+  color: var(--accent-color);
   cursor: pointer;
   padding: 0.5rem;
   font-size: 1.4rem;
@@ -693,9 +696,9 @@ body {
 }
 
 .edit-helmet-icon:hover {
-  background: rgba(0, 255, 0, 0.2);
+  background: var(--button-hover);
   transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+  box-shadow: 0 0 15px rgba(102, 179, 255, 0.3);  /* Changed from green to blue */
 }
 
 .edit-helmet-icon i {
@@ -849,24 +852,36 @@ body {
 }
 
 .navbar-brand h1 {
-  color: #00ff00;
+  color: var(--text-color);
   font-size: 2.2rem;
   font-weight: 700;
   margin: 0;
   letter-spacing: 3px;
   text-transform: uppercase;
-  text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
-  background: linear-gradient(45deg, #00ff00, #00cc00);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  position: relative;
   cursor: pointer;
   transition: all 0.3s ease;
+  position: relative;
 }
 
-.navbar-brand h1:hover {
-  text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-  transform: scale(1.05);
+/* Dark mode specific styles */
+[data-theme="dark"] .navbar-brand h1 {
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .navbar-brand h1:hover {
+  color: #66b3ff;  /* Light blue color on hover */
+  text-shadow: 0 0 15px rgba(102, 179, 255, 0.4);
+}
+
+/* Light mode specific styles */
+[data-theme="light"] .navbar-brand h1 {
+  color: #000000;
+}
+
+[data-theme="light"] .navbar-brand h1:hover {
+  color: #1a75ff;  /* Darker blue color on hover */
+  text-shadow: 0 0 15px rgba(26, 117, 255, 0.4);
 }
 
 .navbar-brand h1::after {
@@ -885,8 +900,8 @@ body {
 }
 
 .nav-item {
-  color: #00ff00;
-  background: rgba(0, 255, 0, 0.1);
+  color: var(--text-color);
+  background: var(--button-bg);
   border: none;
   padding: 0.8rem 1.5rem;
   border-radius: 8px;
@@ -897,10 +912,10 @@ body {
   letter-spacing: 1px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 255, 0, 0.2);
+  box-shadow: 0 2px 5px rgba(102, 179, 255, 0.2);
 }
 
-/* Add ripple effect */
+/* Update ripple effect */
 .nav-item::before {
   content: '';
   position: absolute;
@@ -908,29 +923,19 @@ body {
   left: 50%;
   width: 0;
   height: 0;
-  background: rgba(0, 255, 0, 0.3);
+  background: var(--button-hover);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   transition: width 0.6s ease-out, height 0.6s ease-out;
 }
 
-.nav-item:hover::before {
-  width: 300px;
-  height: 300px;
-}
-
 .nav-item:hover {
-  background: rgba(0, 255, 0, 0.2);
+  background: var(--button-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 255, 0, 0.3);
+  box-shadow: 0 4px 15px rgba(102, 179, 255, 0.3);
 }
 
-.nav-item:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 5px rgba(0, 255, 0, 0.2);
-}
-
-/* Add hover glow effect */
+/* Update glow effect */
 .nav-item::after {
   content: '';
   position: absolute;
@@ -939,7 +944,7 @@ body {
   right: -2px;
   bottom: -2px;
   border-radius: 8px;
-  background: linear-gradient(45deg, #00ff00, #00cc00);
+  background: linear-gradient(45deg, var(--accent-color), #3399ff);
   z-index: -1;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -952,8 +957,22 @@ body {
 /* Add responsive styles for navbar */
 @media (max-width: 768px) {
   .navbar {
-    flex-direction: column;
+    flex-direction: row;  /* Changed from column to row */
     padding: 1rem;
+    justify-content: space-between;  /* Space between brand and theme toggle */
+  }
+
+  .navbar-brand {
+    margin: 0;
+    text-align: left;  /* Align text to left */
+  }
+
+  .navbar-brand h1 {
+    font-size: 1.8rem;  /* Slightly smaller font for mobile */
+  }
+
+  .theme-toggle {
+    margin-left: auto;  /* Push to the right */
   }
 
   .navbar-menu {
@@ -1090,7 +1109,6 @@ body {
 .theme-toggle {
   background: transparent;
   border: none;
-  color: #00ff00;
   font-size: 1.5rem;
   cursor: pointer;
   width: 40px;
@@ -1104,12 +1122,22 @@ body {
   overflow: hidden;
 }
 
+/* Dark mode - white sun icon */
+[data-theme="dark"] .theme-toggle {
+  color: #ffffff;
+}
+
+/* Light mode - black moon icon */
+[data-theme="light"] .theme-toggle {
+  color: #000000;
+}
+
 .theme-toggle::before {
   content: '';
   position: absolute;
   width: 100%;
   height: 100%;
-  background: rgba(0, 255, 0, 0.1);
+  background: var(--button-bg);
   border-radius: 50%;
   transform: scale(0);
   transition: transform 0.3s ease;
@@ -1129,7 +1157,7 @@ body {
   --text-color: #000000;
   --box-bg: #f5f5f5;
   --border-color: #e0e0e0;
-  --accent-color: #000000;
+  --accent-color: #1a75ff;  /* Darker blue for light mode */
   --shadow-color: rgba(0, 0, 0, 0.1);
   --navbar-bg: linear-gradient(
     to bottom,
@@ -1137,9 +1165,9 @@ body {
     rgba(255, 255, 255, 0.8) 80%,
     rgba(255, 255, 255, 0.6) 100%
   );
-  --button-bg: rgba(0, 0, 0, 0.1);
-  --button-hover: rgba(0, 0, 0, 0.2);
-  --button-text: #000000;
+  --button-bg: rgba(26, 117, 255, 0.1);
+  --button-hover: rgba(26, 117, 255, 0.2);
+  --button-text: #1a75ff;
 }
 
 :root[data-theme="dark"] {
@@ -1147,7 +1175,7 @@ body {
   --text-color: #ffffff;
   --box-bg: #111111;
   --border-color: #333333;
-  --accent-color: #ffffff;
+  --accent-color: #66b3ff;  /* Light blue for dark mode */
   --shadow-color: rgba(255, 255, 255, 0.1);
   --navbar-bg: linear-gradient(
     to bottom,
@@ -1155,9 +1183,10 @@ body {
     rgba(0, 0, 0, 0.8) 80%,
     rgba(0, 0, 0, 0.6) 100%
   );
-  --button-bg: rgba(255, 255, 255, 0.1);
-  --button-hover: rgba(255, 255, 255, 0.2);
-  --button-text: #ffffff;
+  --button-bg: rgba(102, 179, 255, 0.1);
+  --button-hover: rgba(102, 179, 255, 0.2);
+  --button-text: #ffffff;  /* Changed to white */
+  --secondary-text: #cccccc;  /* For less emphasized text */
 }
 
 /* Update these styles to use CSS variables */
@@ -1275,21 +1304,21 @@ body {
 
 /* Update existing color references */
 .navbar-brand h1 {
-  color: var(--text-color);
-  text-shadow: 0 0 10px var(--shadow-color);
-  background: var(--text-color);
+  color: var(--accent-color);
+  text-shadow: 0 0 10px rgba(102, 179, 255, 0.3);
+  background: linear-gradient(45deg, var(--accent-color), #3399ff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .theme-toggle {
-  color: var(--text-color);
+  color: var(--accent-color);
 }
 
 .nav-item {
-  color: var(--text-color);
+  color: var(--accent-color);
   background: var(--button-bg);
-  box-shadow: 0 2px 5px var(--shadow-color);
+  box-shadow: 0 2px 5px rgba(102, 179, 255, 0.2);
 }
 
 .nav-item:hover {
@@ -1297,8 +1326,8 @@ body {
 }
 
 .helmet-name {
-  color: var(--text-color);
-  text-shadow: 0 0 10px var(--shadow-color);
+  color: var(--accent-color);
+  text-shadow: 0 0 10px rgba(102, 179, 255, 0.3);
 }
 
 .edit-helmet-icon {
@@ -1362,7 +1391,263 @@ body {
 
 /* Update page title */
 .page-title {
-  color: var(--text-color);
-  text-shadow: 0 0 10px var(--shadow-color);
+  color: var(--accent-color);
+  text-shadow: 0 0 10px rgba(102, 179, 255, 0.3);
 }
 
+/* Update theme variables for better text contrast */
+:root[data-theme="dark"] {
+  --bg-color: #000000;
+  --text-color: #ffffff;
+  --box-bg: #111111;
+  --border-color: #333333;
+  --accent-color: #66b3ff;
+  --shadow-color: rgba(255, 255, 255, 0.1);
+  --navbar-bg: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 60%,
+    rgba(0, 0, 0, 0.8) 80%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  --button-bg: rgba(102, 179, 255, 0.1);
+  --button-hover: rgba(102, 179, 255, 0.2);
+  --button-text: #ffffff;  /* Changed to white */
+  --secondary-text: #cccccc;  /* For less emphasized text */
+}
+
+/* Update text colors for dark mode */
+[data-theme="dark"] .nav-item {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .helmet-name {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .modal-content h2,
+[data-theme="dark"] .modal-content p {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .form-group label {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .details-content p,
+[data-theme="dark"] .details-content p span {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .permission-items p {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .box-header h3 {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .edit-box-btn {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .helmet-name-input {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .helmet-name-save {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .page-title {
+  color: #ffffff;
+}
+
+/* Update light mode text colors */
+[data-theme="light"] {
+  --text-color: #000000;
+  --secondary-text: #333333;
+}
+
+[data-theme="light"] .nav-item {
+  color: #000000;
+}
+
+[data-theme="light"] .helmet-name {
+  color: #000000;
+}
+
+[data-theme="light"] .modal-content h2,
+[data-theme="light"] .modal-content p {
+  color: #000000;
+}
+
+[data-theme="light"] .form-group label {
+  color: #000000;
+}
+
+[data-theme="light"] .details-content p,
+[data-theme="light"] .details-content p span {
+  color: #000000;
+}
+
+[data-theme="light"] .permission-items p {
+  color: #000000;
+}
+
+[data-theme="light"] .box-header h3 {
+  color: #000000;
+}
+
+[data-theme="light"] .edit-box-btn {
+  color: #000000;
+}
+
+[data-theme="light"] .helmet-name-input {
+  color: #000000;
+}
+
+[data-theme="light"] .helmet-name-save {
+  color: #000000;
+}
+
+[data-theme="light"] .page-title {
+  color: #000000;
+}
+
+[data-theme="light"] .permission-items p.granted {
+  color: #000000;
+}
+
+[data-theme="light"] .permission-items p.denied {
+  color: #666666;
+}
+
+/* Form button styles */
+.form-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.cancel-btn,
+.submit-btn {
+  min-width: 150px;
+  padding: 0.8rem 2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cancel-btn {
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cancel-btn:hover {
+  background-color: #f5f5f5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+
+/* Navigation form styles */
+.navigation-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  background: var(--button-bg);
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  animation: expandInput 0.3s ease-out;
+}
+
+@keyframes expandInput {
+  from {
+    width: 120px;
+    opacity: 0;
+  }
+  to {
+    width: 300px;
+    opacity: 1;
+  }
+}
+
+.navigation-input {
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-family: inherit;
+  width: 250px;
+  outline: none;
+}
+
+.navigation-input::placeholder {
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.navigation-search-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.navigation-search-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .navigation-form {
+    width: 100%;
+  }
+
+  .navigation-input {
+    width: 100%;
+  }
+
+  @keyframes expandInput {
+    from {
+      width: 100%;
+      opacity: 0;
+    }
+    to {
+      width: 100%;
+      opacity: 1;
+    }
+  }
+}
