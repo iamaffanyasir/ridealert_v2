@@ -67,10 +67,22 @@ function EditDetails({
             </button>
           </div>
           <div className="details-content">
-            <p><span>Name:</span> {userDetails.name}</p>
-            <p><span>Email:</span> {userDetails.email}</p>
-            <p><span>Phone:</span> {userDetails.phone}</p>
-            <p><span>Address:</span> {userDetails.address}</p>
+            <p>
+              <span>Name:</span>
+              <span title={userDetails.name}>{userDetails.name}</span>
+            </p>
+            <p title="email">
+              <span>Email:</span>
+              <span title={userDetails.email}>{userDetails.email}</span>
+            </p>
+            <p>
+              <span>Phone:</span>
+              <span title={userDetails.phone}>{userDetails.phone}</span>
+            </p>
+            <p title="address">
+              <span>Address:</span>
+              <span title={userDetails.address}>{userDetails.address}</span>
+            </p>
           </div>
         </div>
 
@@ -83,8 +95,14 @@ function EditDetails({
               </button>
             </div>
             <div className="details-content">
-              <p><span>Name:</span> {emergencyContact.emergencyName}</p>
-              <p><span>Phone:</span> {emergencyContact.emergencyPhone}</p>
+              <p>
+                <span>Name:</span>
+                <span title={emergencyContact.emergencyName}>{emergencyContact.emergencyName}</span>
+              </p>
+              <p>
+                <span>Phone:</span>
+                <span title={emergencyContact.emergencyPhone}>{emergencyContact.emergencyPhone}</span>
+              </p>
             </div>
           </div>
         )}

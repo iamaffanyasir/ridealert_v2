@@ -1039,6 +1039,8 @@ body {
 /* Edit Details Page Styles */
 .edit-details-page {
   padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .page-title {
@@ -1064,6 +1066,8 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .box-header h3 {
@@ -2010,4 +2014,87 @@ body {
   .helmet-image-wrapper {
     margin-top: 50px;
   }
+}
+
+/* Update Edit Details Page Styles */
+.edit-details-page {
+  padding: 2rem;
+}
+
+.dashboard-container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+/* Update info box styles for consistent sizing */
+.info-box {
+  flex: 1;
+  min-width: 350px;
+  max-width: 400px;
+  background: #111111;
+  border-radius: 15px;
+  padding: 2rem;
+  transition: transform 0.2s ease;
+  margin: 1rem;
+}
+
+/* Update content spacing */
+.details-content {
+  padding: 0 1rem;
+}
+
+.details-content p {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  gap: 1rem;  /* Add gap between label and value */
+}
+
+/* Style for all value spans */
+.details-content p span:last-child {
+  text-align: right;
+  flex: 1;  /* Allow value to take remaining space */
+  min-width: 0;  /* Allow text to shrink */
+}
+
+/* Specific style for email and address */
+.details-content p[title="email"] span:last-child,
+.details-content p[title="address"] span:last-child {
+  max-width: 180px;  /* Limit width */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+/* Label styles */
+.details-content p span:first-child {
+  flex-shrink: 0;  /* Prevent label from shrinking */
+  min-width: 70px;  /* Minimum width for labels */
+}
+
+/* Hover tooltip */
+.details-content p[title="email"] span:last-child:hover::after,
+.details-content p[title="address"] span:last-child:hover::after {
+  content: attr(title);
+  position: absolute;
+  right: 0;
+  top: -35px;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  white-space: normal;
+  max-width: 250px;
+  word-break: break-all;
+  z-index: 10;
 }
