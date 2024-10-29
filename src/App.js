@@ -56,7 +56,7 @@ function UserDetailsForm({ onSubmit, onCancel, initialData }) {
   return (
     <div className="modal-overlay">
       <div className="modal-content form-content">
-        <h2>RideAlert</h2>  {/* Changed from "User Details" */}
+        <h2>Enter User Details</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="name">Name</label>
@@ -102,8 +102,8 @@ function UserDetailsForm({ onSubmit, onCancel, initialData }) {
             />
           </div>
           <div className="form-buttons">
-            <button type="button" onClick={onCancel} className="cancel-btn">Cancel</button>
             <button type="submit" className="submit-btn">Submit</button>
+            <button type="button" onClick={onCancel} className="cancel-btn">CANCEL</button>
           </div>
         </form>
       </div>
@@ -158,8 +158,8 @@ function EmergencyContactForm({ onSubmit, onCancel, initialData }) {
             />
           </div>
           <div className="form-buttons">
-            <button type="button" onClick={onCancel} className="cancel-btn">Cancel</button>
             <button type="submit" className="submit-btn">Submit</button>
+            <button type="button" onClick={onCancel} className="cancel-btn">CANCEL</button>
           </div>
         </form>
       </div>
@@ -460,117 +460,133 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar 
-        onEditDetailsClick={setCurrentPage}
-        theme={theme}
-        onThemeToggle={toggleTheme}
-      />
-      {!hasCompletedSetup() && currentPermission && (
-        <PermissionModal
-          {...getPermissionContent()}
-          onAccept={() => handlePermission(currentPermission, true)}
-          onDeny={() => handlePermission(currentPermission, false)}
-        />
-      )}
+      {loading ? (
+        // Add loading screen
+        <div className="loading-screen">
+          <h1>RideAlert</h1>
+          <div className="loading-bar">
+            <div className="loading-progress"></div>
+          </div>
+        </div>
+      ) : (
+        // Rest of your app content
+        <>
+          <Navbar 
+            onEditDetailsClick={setCurrentPage}
+            theme={theme}
+            onThemeToggle={toggleTheme}
+          />
+          {!hasCompletedSetup() && currentPermission && (
+            <PermissionModal
+              {...getPermissionContent()}
+              onAccept={() => handlePermission(currentPermission, true)}
+              onDeny={() => handlePermission(currentPermission, false)}
+            />
+          )}
 
-      {!hasCompletedSetup() && showForm && <UserDetailsForm onSubmit={handleFormSubmit} onCancel={() => setShowForm(false)} initialData={userDetails} />}
-      
-      {!hasCompletedSetup() && showEmergencyForm && <EmergencyContactForm onSubmit={handleEmergencyFormSubmit} onCancel={() => setShowEmergencyForm(false)} initialData={emergencyContact} />}
+          {!hasCompletedSetup() && showForm && <UserDetailsForm onSubmit={handleFormSubmit} onCancel={() => setShowForm(false)} initialData={userDetails} />}
+          
+          {!hasCompletedSetup() && showEmergencyForm && <EmergencyContactForm onSubmit={handleEmergencyFormSubmit} onCancel={() => setShowEmergencyForm(false)} initialData={emergencyContact} />}
 
-      {(hasCompletedSetup() || (!currentPermission && !showForm && !showEmergencyForm && userDetails)) && (
-        currentPage === 'home' ? (
-          <>
-            <div className="helmet-container">
-              <div className="bubble-background">
-                {[...Array(60)].map((_, i) => (  // Increased from 40 to 60 bubbles
-                  <div 
-                    key={i} 
-                    className="bubble" 
-                    style={{
-                      '--delay': `${Math.random() * 5}s`,  // Random delay for more natural effect
-                      animationDelay: `${Math.random() * 5}s`  // Add explicit animation delay
-                    }}
-                  />
-                ))}
-              </div>
-              <div className="helmet-section">
-                <img 
-                  src="/helmet.png" 
-                  alt="Smart Helmet" 
-                  className="helmet-image"
-                />
-                <div className="helmet-name-container">
-                  {editingHelmetName ? (
-                    <form onSubmit={handleHelmetNameSubmit} className="helmet-name-form">
-                      <input
-                        type="text"
-                        value={helmetName}
-                        onChange={(e) => setHelmetName(e.target.value)}
-                        className="helmet-name-input"
-                        autoFocus
+          {(hasCompletedSetup() || (!currentPermission && !showForm && !showEmergencyForm && userDetails)) && (
+            currentPage === 'home' ? (
+              <>
+                <div className="helmet-container">
+                  <div className="bubble-background">
+                    {[...Array(60)].map((_, i) => (  // Increased from 40 to 60 bubbles
+                      <div 
+                        key={i} 
+                        className="bubble" 
+                        style={{
+                          '--delay': `${Math.random() * 5}s`,  // Random delay for more natural effect
+                          animationDelay: `${Math.random() * 5}s`  // Add explicit animation delay
+                        }}
                       />
-                      <button type="submit" className="helmet-name-save">Save</button>
-                    </form>
-                  ) : (
-                    <div className="helmet-name-wrapper">
-                      <h2 className="helmet-name">{helmetName}</h2>
-                      <button 
-                        onClick={() => setEditingHelmetName(true)}
-                        className="edit-helmet-icon"
-                        aria-label="Edit helmet name"
-                      >
-                        <span className="material-icons">edit</span>
-                      </button>
-                    </div>
-                  )}
-                  {/* Add the navigation buttons here */}
-                  <div className="helmet-nav-buttons">
-                    <button onClick={handleBluetoothClick} className="nav-item">
-                      Connect Device
-                    </button>
-                    <button onClick={() => setCurrentPage('editDetails')} className="nav-item">
-                      Edit Details
-                    </button>
-                    {showNavigationInput ? (
-                      <form onSubmit={handleNavigationSubmit} className="navigation-form">
-                        <input
-                          type="text"
-                          value={destination}
-                          onChange={(e) => setDestination(e.target.value)}
-                          placeholder="Enter destination..."
-                          className="navigation-input"
-                          autoFocus
-                        />
-                        <button type="submit" className="navigation-search-btn">
-                          <span className="material-icons">search</span>
+                    ))}
+                  </div>
+                  <div className="helmet-section">
+                    <img 
+                      src="/helmet.png" 
+                      alt="Smart Helmet" 
+                      className="helmet-image"
+                    />
+                    <div className="helmet-name-container">
+                      {editingHelmetName ? (
+                        <form onSubmit={handleHelmetNameSubmit} className="helmet-name-form">
+                          <input
+                            type="text"
+                            value={helmetName}
+                            onChange={(e) => setHelmetName(e.target.value)}
+                            className="helmet-name-input"
+                            autoFocus
+                          />
+                          <button type="submit" className="helmet-name-save">Save</button>
+                        </form>
+                      ) : (
+                        <div className="helmet-name-wrapper">
+                          <h2 className="helmet-name">{helmetName}</h2>
+                          <button 
+                            onClick={() => setEditingHelmetName(true)}
+                            className="edit-helmet-icon"
+                            aria-label="Edit helmet name"
+                          >
+                            <span className="material-icons">edit</span>
+                          </button>
+                        </div>
+                      )}
+                      {/* Add the navigation buttons here */}
+                      <div className="helmet-nav-buttons">
+                        <button onClick={handleBluetoothClick} className="nav-item">
+                          Connect Device
                         </button>
-                      </form>
-                    ) : (
-                      <button onClick={handleNavigationClick} className="nav-item">
-                        Navigation
-                      </button>
-                    )}
+                        <button onClick={() => setCurrentPage('editDetails')} className="nav-item">
+                          Edit Details
+                        </button>
+                        {showNavigationInput ? (
+                          <form onSubmit={handleNavigationSubmit} className="navigation-form">
+                            <input
+                              type="text"
+                              value={destination}
+                              onChange={(e) => setDestination(e.target.value)}
+                              placeholder="Enter destination..."
+                              className="navigation-input"
+                              autoFocus
+                            />
+                            <button type="submit" className="navigation-search-btn">
+                              <span className="material-icons">search</span>
+                            </button>
+                          </form>
+                        ) : (
+                          <button onClick={handleNavigationClick} className="nav-item">
+                            Navigation
+                          </button>
+                        )}
+                        <button onClick={handleSignOut} className="nav-item">
+                          Sign Out
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </>
-        ) : (
-          <EditDetails 
-            permissions={permissions}
-            userDetails={userDetails}
-            emergencyContact={emergencyContact}
-            PermissionModal={PermissionModal}
-            UserDetailsForm={UserDetailsForm}
-            EmergencyContactForm={EmergencyContactForm}
-            onUpdateUserDetails={handleUpdateUserDetails}
-            onUpdateEmergencyContact={handleUpdateEmergencyContact}
-            onUpdatePermissions={handleUpdatePermissions}
-          />
-        )
-      )}
-      {showBluetoothModal && (
-        <BluetoothPairingModal onClose={() => setShowBluetoothModal(false)} />
+              </>
+            ) : (
+              <EditDetails 
+                permissions={permissions}
+                userDetails={userDetails}
+                emergencyContact={emergencyContact}
+                PermissionModal={PermissionModal}
+                UserDetailsForm={UserDetailsForm}
+                EmergencyContactForm={EmergencyContactForm}
+                onUpdateUserDetails={handleUpdateUserDetails}
+                onUpdateEmergencyContact={handleUpdateEmergencyContact}
+                onUpdatePermissions={handleUpdatePermissions}
+              />
+            )
+          )}
+          {showBluetoothModal && (
+            <BluetoothPairingModal onClose={() => setShowBluetoothModal(false)} />
+          )}
+        </>
       )}
     </div>
   );
