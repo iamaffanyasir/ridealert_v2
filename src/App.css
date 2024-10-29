@@ -406,12 +406,10 @@ body {
   position: relative;
   width: 100%;
   height: 900px;
-  margin-bottom: 0;  /* Changed from 2rem to 0 */
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: none;  /* Add this to ensure no border */
 }
 
 .helmet-image {
@@ -563,12 +561,33 @@ body {
 /* Add responsive sizing for mobile devices */
 @media (max-width: 768px) {
   .helmet-container {
-    height: 1000px;  /* Even more height for mobile due to stacked buttons */
+    height: 1200px;  /* Increased height for mobile */
+    padding: 2rem 0;
+  }
+  
+  .helmet-section {
+    margin-top: 100px;  /* Add space at the top */
   }
   
   .helmet-image {
     width: 350px;
-    margin-top: -100px;  /* Move helmet up a bit on mobile */
+    margin-top: 0;     /* Reset margin */
+  }
+  
+  .helmet-nav-buttons {
+    flex-direction: column;
+    padding: 0 2rem;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .nav-item {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .bubble-background {
+    height: 80%;  /* Adjust bubble background height */
   }
 }
 
@@ -1103,16 +1122,31 @@ body {
 /* Add styles for the new button container */
 .helmet-nav-buttons {
   display: flex;
-  flex-direction: row;     /* Change back to row layout */
+  flex-direction: row;     /* Horizontal by default */
   gap: 1rem;
   margin-top: 2rem;
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-width: 900px;       /* Increased max-width for horizontal layout */
+  max-width: 900px;
   margin-left: auto;
   margin-right: auto;
   padding: 0 1rem;
+}
+
+/* Stack buttons vertically only on mobile */
+@media (max-width: 768px) {
+  .helmet-nav-buttons {
+    flex-direction: column;  /* Stack vertically on mobile */
+    width: 100%;
+    gap: 1rem;
+    padding: 0 2rem;
+  }
+
+  .nav-item {
+    width: 100%;           /* Full width on mobile */
+    min-width: unset;
+  }
 }
 
 /* Update helmet name container to accommodate buttons */
@@ -1873,4 +1907,107 @@ body {
 
 [data-theme="light"] .modal-content p {
   color: var(--secondary-text);
+}
+
+/* Desktop styles for helmet nav buttons */
+.helmet-nav-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.nav-item {
+  padding: 0.8rem 1.5rem;
+  min-height: 48px;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: min-content;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Remove all other media queries for these elements and use only this one */
+@media screen and (max-width: 768px) {
+  .helmet-container {
+    height: auto;
+    padding-bottom: 2rem;
+  }
+  
+  .helmet-nav-buttons {
+    flex-direction: column;
+    padding: 0 2rem;
+    gap: 1rem;
+  }
+  
+  .nav-item {
+    width: 100%;
+    min-width: 100%;
+  }
+}
+
+/* Add these styles for the helmet image glow effect */
+.helmet-image {
+  width: 500px;
+  height: auto;
+  z-index: 2;
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
+  animation: float 3s ease-in-out infinite;
+  position: relative;
+}
+
+/* Add wrapper for the glow effect */
+.helmet-image-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.helmet-image-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, 
+    #00ff00, 
+    #66b3ff, 
+    #00ff00
+  );
+  z-index: 1;
+  animation: glowBorder 3s linear infinite;
+  filter: blur(5px);
+}
+
+@keyframes glowBorder {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Update media query for mobile */
+@media (max-width: 768px) {
+  .helmet-image {
+    width: 350px;
+  }
+  
+  .helmet-image-wrapper {
+    margin-top: 50px;
+  }
 }
