@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import EditDetails from './pages/EditDetails';
 import { localDB } from './utils/localDB';
+import TestHelmet from './pages/TestHelmet';
 
 function Navbar({ onEditDetailsClick, theme, onThemeToggle }) {
   return (
@@ -177,24 +178,32 @@ function BluetoothPairingModal({ onClose }) {
       setIsScanning(true);
       setError(null);
 
-      // Request Bluetooth device without filters to see all available devices
       const bluetoothDevice = await navigator.bluetooth.requestDevice({
-        acceptAllDevices: true,
-        optionalServices: ['battery_service', '0000180f-0000-1000-8000-00805f9b34fb']
+        // Use filters to show only ESP32 devices
+        filters: [
+          { namePrefix: 'ESP32' } // This will show devices starting with ESP32
+        ],
+        optionalServices: ['00001101-0000-1000-8000-00805f9b34fb']
       });
 
       setDevice(bluetoothDevice);
+      console.log('Device name:', bluetoothDevice.name);
 
-      // Add event listener for when device gets disconnected
       bluetoothDevice.addEventListener('gattserverdisconnected', () => {
         setDevice(null);
         setError('Device disconnected');
+        localStorage.removeItem('connectedDevice');
       });
 
-      // Try to connect to the device
       const server = await bluetoothDevice.gatt.connect();
-      console.log('Connected to GATT server:', server);
+      console.log('Connected to GATT server');
 
+      // Store device info for reconnection
+      localStorage.setItem('connectedDevice', JSON.stringify({
+        name: bluetoothDevice.name || 'ESP32_SmartHelmet',
+        id: bluetoothDevice.id
+      }));
+      
       onClose();
     } catch (err) {
       console.error('Bluetooth Error:', err);
@@ -211,12 +220,13 @@ function BluetoothPairingModal({ onClose }) {
         {error && <p className="error-message">{error}</p>}
         {device ? (
           <div className="device-info">
-            <p>Connected to: {device.name}</p>
-            <p>ID: {device.id}</p>
+            <p>Connected to: {device.name || 'ESP32_SmartHelmet'}</p>
+            <p className="device-id">ID: {device.id}</p>
           </div>
         ) : (
           <>
-            <p>Click the button below to scan for nearby RideAlert devices</p>
+            <p>Click the button below to scan for your ESP32 Smart Helmet</p>
+            <p className="device-hint">Look for a device named "ESP32_SmartHelmet"</p>
             <button 
               onClick={startScanning} 
               className="scan-btn"
@@ -229,6 +239,18 @@ function BluetoothPairingModal({ onClose }) {
         <button onClick={onClose} className="close-btn">Close</button>
       </div>
     </div>
+  );
+}
+
+function TestFAB({ onTestClick }) {
+  return (
+    <button 
+      className="test-fab"
+      onClick={onTestClick}
+    >
+      <span className="material-icons">speed</span>
+      <span className="fab-label">Test</span>
+    </button>
   );
 }
 
@@ -247,6 +269,7 @@ function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
   const [showNavigationInput, setShowNavigationInput] = useState(false);
   const [destination, setDestination] = useState('');
+  const [showTestPage, setShowTestPage] = useState(false);
 
   // Check if user has already completed setup
   const hasCompletedSetup = () => {
@@ -461,7 +484,6 @@ function App() {
   return (
     <div className="App">
       {loading ? (
-        // Add loading screen
         <div className="loading-screen">
           <h1>RideAlert</h1>
           <div className="loading-bar">
@@ -469,7 +491,6 @@ function App() {
           </div>
         </div>
       ) : (
-        // Rest of your app content
         <>
           <Navbar 
             onEditDetailsClick={setCurrentPage}
@@ -536,10 +557,18 @@ function App() {
                       )}
                       {/* Add the navigation buttons here */}
                       <div className="helmet-nav-buttons">
-                        <button onClick={handleBluetoothClick} className="nav-item">
+                        <button 
+                          onClick={handleBluetoothClick} 
+                          className="nav-item"
+                          data-icon="bluetooth"
+                        >
                           Connect Device
                         </button>
-                        <button onClick={() => setCurrentPage('editDetails')} className="nav-item">
+                        <button 
+                          onClick={() => setCurrentPage('editDetails')} 
+                          className="nav-item"
+                          data-icon="edit"
+                        >
                           Edit Details
                         </button>
                         {showNavigationInput ? (
@@ -557,11 +586,19 @@ function App() {
                             </button>
                           </form>
                         ) : (
-                          <button onClick={handleNavigationClick} className="nav-item">
+                          <button 
+                            onClick={handleNavigationClick} 
+                            className="nav-item"
+                            data-icon="navigation"
+                          >
                             Navigation
                           </button>
                         )}
-                        <button onClick={handleSignOut} className="nav-item">
+                        <button 
+                          onClick={handleSignOut} 
+                          className="nav-item"
+                          data-icon="logout"
+                        >
                           Sign Out
                         </button>
                       </div>
@@ -585,6 +622,10 @@ function App() {
           )}
           {showBluetoothModal && (
             <BluetoothPairingModal onClose={() => setShowBluetoothModal(false)} />
+          )}
+          <TestFAB onTestClick={() => setShowTestPage(true)} />
+          {showTestPage && (
+            <TestHelmet onClose={() => setShowTestPage(false)} />
           )}
         </>
       )}
